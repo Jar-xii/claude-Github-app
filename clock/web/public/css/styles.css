@@ -188,6 +188,14 @@ button.secondary:hover { background: var(--border); }
   font-variant-numeric: tabular-nums;
 }
 
+.time-display .display-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
 .time-display .zone-label {
   font-size: 0.85rem;
   color: var(--muted);

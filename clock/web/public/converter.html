@@ -18,7 +18,7 @@
     <h1>Time Converter</h1>
     <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.5rem">
       Enter a time with a timezone — e.g. <strong>8pm UK</strong>, <strong>15:00 Tokyo</strong>,
-      <strong>3:30pm EST</strong>, <strong>noon UTC</strong>.
+      <strong>3:30pm EST</strong>, <strong>noon UTC</strong>, <strong>1430 PST</strong>.
     </p>
 
     <div class="card">
@@ -26,30 +26,36 @@
         <label for="time-input">Time to convert</label>
         <input type="text" id="time-input" placeholder="e.g. 8pm UK" autocomplete="off" spellcheck="false">
       </div>
-      <div class="alert" id="parse-error"></div>
+      <div id="parse-error" class="alert"></div>
     </div>
 
+    <!-- Results — hidden until a valid conversion is available -->
     <div class="result-box" id="result-box">
+
+      <!-- Source time -->
       <div class="time-display" id="original-display">
-        <div class="big-time" id="orig-time"></div>
-        <div class="zone-label" id="orig-zone"></div>
+        <div class="display-label" id="orig-label">Original time</div>
+        <div class="big-time"    id="orig-time"></div>
+        <div class="zone-label"  id="orig-zone"></div>
         <div class="offset-label" id="orig-offset"></div>
       </div>
 
       <div class="result-arrow">↓</div>
 
+      <!-- Converted time (recipient's timezone) -->
       <div class="time-display" id="converted-display">
-        <div style="font-size:.8rem;color:var(--muted);margin-bottom:.3rem">In your timezone</div>
-        <div class="big-time" id="conv-time"></div>
-        <div class="zone-label" id="conv-zone"></div>
+        <div class="display-label">In your timezone</div>
+        <div class="big-time"    id="conv-time"></div>
+        <div class="zone-label"  id="conv-zone"></div>
         <div class="offset-label" id="conv-offset"></div>
-        <div id="no-tz-msg" style="display:none;font-size:.8rem;color:var(--muted)">
-          <a href="/settings">Set your timezone</a> to see the conversion
+        <div id="no-tz-msg" style="display:none;font-size:.85rem;color:var(--muted);margin-top:.5rem">
+          <a href="/settings">Set your timezone</a> to see the conversion here.
         </div>
       </div>
 
+      <!-- Shareable link -->
       <div class="share-row">
-        <input type="text" id="share-url" readonly placeholder="Share link will appear here">
+        <input type="text" id="share-url" readonly placeholder="Shareable link will appear here">
         <button id="copy-btn" class="secondary">Copy link</button>
       </div>
     </div>

@@ -6,6 +6,7 @@
   const inputEl    = document.getElementById('time-input');
   const errorEl    = document.getElementById('parse-error');
   const resultBox  = document.getElementById('result-box');
+  const origLabel  = document.getElementById('orig-label');
   const origTime   = document.getElementById('orig-time');
   const origZone   = document.getElementById('orig-zone');
   const origOffset = document.getElementById('orig-offset');
@@ -16,54 +17,58 @@
   const shareUrl   = document.getElementById('share-url');
   const copyBtn    = document.getElementById('copy-btn');
 
-  let lastResult = null;
-
   function getUserTz() {
     return localStorage.getItem(STORAGE_KEY) || null;
   }
+
+  // ── Error / clear helpers ─────────────────────────────────────────────────────
 
   function showError(msg) {
     errorEl.textContent = msg;
     errorEl.className = 'alert show error';
     resultBox.classList.remove('show');
-    lastResult = null;
   }
 
   function clearError() {
     errorEl.classList.remove('show');
   }
 
-  function renderResult(data) {
-    lastResult = data;
+  // ── Render result ─────────────────────────────────────────────────────────────
+
+  function renderResult(data, sourceLabel) {
     clearError();
     resultBox.classList.add('show');
 
+    // Source time
+    origLabel.textContent  = sourceLabel || 'Original time';
     origTime.textContent   = data.original.time;
     origZone.textContent   = data.original.zone;
     origOffset.textContent = data.original.utcOffset;
 
-    const userTz = getUserTz();
-
+    // Converted time (recipient)
     if (data.converted) {
-      convTime.textContent   = data.converted.time;
-      convZone.textContent   = data.converted.zone;
-      convOffset.textContent = data.converted.utcOffset;
-      noTzMsg.style.display  = 'none';
-      convTime.style.display = convZone.style.display = convOffset.style.display = '';
-      buildShareLink(data.original.isoString, data.original.zone);
-    } else if (!userTz) {
-      convTime.style.display = convZone.style.display = convOffset.style.display = 'none';
-      noTzMsg.style.display = '';
-      buildShareLink(data.original.isoString, data.original.zone);
+      convTime.textContent    = data.converted.time;
+      convZone.textContent    = data.converted.zone;
+      convOffset.textContent  = data.converted.utcOffset;
+      convTime.style.display  = '';
+      convZone.style.display  = '';
+      convOffset.style.display = '';
+      noTzMsg.style.display   = 'none';
+    } else {
+      convTime.style.display   = 'none';
+      convZone.style.display   = 'none';
+      convOffset.style.display = 'none';
+      noTzMsg.style.display    = '';
     }
-  }
 
-  function buildShareLink(isoString, sourceZone) {
+    // Build share link from the ISO string produced by the server
     const url = new URL(window.location.origin + '/share');
-    url.searchParams.set('t', isoString);
-    url.searchParams.set('tz', sourceZone);
+    url.searchParams.set('t',  data.original.isoString);
+    url.searchParams.set('tz', data.original.zone);
     shareUrl.value = url.toString();
   }
+
+  // ── Convert via text input ────────────────────────────────────────────────────
 
   async function doConvert(raw) {
     if (!raw.trim()) {
@@ -72,8 +77,8 @@
       return;
     }
 
-    const userTz = getUserTz();
     const body = { timeString: raw };
+    const userTz = getUserTz();
     if (userTz) body.targetZone = userTz;
 
     try {
@@ -95,46 +100,64 @@
     }
   }
 
-  // Debounced input handler
-  let debounce;
+  // Debounced input (350 ms)
+  let debounceTimer;
   inputEl.addEventListener('input', () => {
-    clearTimeout(debounce);
-    debounce = setTimeout(() => doConvert(inputEl.value), 350);
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => doConvert(inputEl.value), 350);
   });
 
-  // Copy share link
+  // ── Re-convert when timezone changes in another tab ───────────────────────────
+  window.addEventListener('storage', e => {
+    if (e.key === STORAGE_KEY && inputEl.value.trim()) {
+      doConvert(inputEl.value);
+    }
+  });
+
+  // ── Copy share link ────────────────────────────────────────────────────────────
   copyBtn.addEventListener('click', () => {
-    if (!shareUrl.value) return;
-    navigator.clipboard.writeText(shareUrl.value).then(() => {
+    const link = shareUrl.value;
+    if (!link) return;
+    navigator.clipboard.writeText(link).then(() => {
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => (copyBtn.textContent = 'Copy link'), 2000);
+    }).catch(() => {
+      // Fallback for browsers without clipboard API
+      shareUrl.select();
+      document.execCommand('copy');
       copyBtn.textContent = 'Copied!';
       setTimeout(() => (copyBtn.textContent = 'Copy link'), 2000);
     });
   });
 
-  // ── Handle ?t= and ?tz= params (shareable link) ───────────────────────────
-  function parseShareParams() {
+  // ── Handle ?t= / ?tz= params on page load (shareable link) ───────────────────
+  function loadShareParams() {
     const params = new URLSearchParams(window.location.search);
-    const t  = params.get('t');
-    const tz = params.get('tz');
+    const t      = params.get('t');   // ISO timestamp from the sender
+    const tzFrom = params.get('tz');  // source timezone (for display)
 
     if (!t) return;
 
-    const userTz = getUserTz();
-    const url = `/api/convert?t=${encodeURIComponent(t)}${userTz ? '&tz=' + encodeURIComponent(userTz) : ''}`;
+    const userTz  = getUserTz();
+    const apiUrl  = '/api/convert?t=' + encodeURIComponent(t) +
+                    (userTz ? '&tz=' + encodeURIComponent(userTz) : '');
 
-    fetch(url)
+    fetch(apiUrl)
       .then(r => r.json())
       .then(data => {
         if (!data.ok) {
           showError(data.error || 'Could not decode shared link.');
           return;
         }
-        // Pre-fill the input with a friendly representation
-        if (tz) inputEl.value = `(shared time from ${tz})`;
-        renderResult(data);
+        // Label the source box with the original sender's timezone
+        const label = tzFrom ? `Shared from ${tzFrom}` : 'Shared time';
+        inputEl.value = tzFrom
+          ? `(time shared from ${tzFrom})`
+          : '(shared time)';
+        renderResult(data, label);
       })
       .catch(() => showError('Failed to load shared time.'));
   }
 
-  parseShareParams();
+  loadShareParams();
 })();
