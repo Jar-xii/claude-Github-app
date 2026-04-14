@@ -1,0 +1,230 @@
+/* ── Reset & base ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0f1117;
+  --surface:  #1a1d27;
+  --border:   #2a2d3a;
+  --accent:   #5865f2;
+  --accent-h: #4752c4;
+  --text:     #e2e3ea;
+  --muted:    #72748a;
+  --success:  #3ba55d;
+  --error:    #ed4245;
+  --radius:   10px;
+  --font:     'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Nav ────────────────────────────────────────────────────────────────────── */
+nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  height: 54px;
+}
+
+nav .logo {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+nav a {
+  color: var(--muted);
+  font-size: 0.9rem;
+  transition: color .15s;
+}
+
+nav a:hover, nav a.active {
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* ── Main layout ────────────────────────────────────────────────────────────── */
+main {
+  flex: 1;
+  padding: 3rem 2rem;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.4rem; }
+h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.8rem; color: var(--muted); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Form elements ──────────────────────────────────────────────────────────── */
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+input[type="text"], select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 1rem;
+  padding: 0.6rem 0.8rem;
+  outline: none;
+  transition: border-color .15s;
+}
+
+input[type="text"]:focus, select:focus {
+  border-color: var(--accent);
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+button:hover { background: var(--accent-h); }
+
+button.secondary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+button.secondary:hover { background: var(--border); }
+
+/* ── Alerts ─────────────────────────────────────────────────────────────────── */
+.alert {
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  display: none;
+}
+
+.alert.show { display: block; }
+.alert.success { background: rgba(59,165,93,.15); color: #4ac67e; border: 1px solid rgba(59,165,93,.3); }
+.alert.error   { background: rgba(237,66,69,.15);  color: #f57c7e; border: 1px solid rgba(237,66,69,.3); }
+
+/* ── Clock display ──────────────────────────────────────────────────────────── */
+#clock-time {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+#clock-date { font-size: 1rem; color: var(--muted); margin-top: 0.3rem; }
+#clock-zone { font-size: 0.85rem; color: var(--accent); margin-top: 0.2rem; }
+#clock-offset { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+
+#no-tz-banner {
+  background: rgba(88,101,242,.12);
+  border: 1px solid rgba(88,101,242,.3);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* ── Converter ──────────────────────────────────────────────────────────────── */
+.result-box {
+  margin-top: 1.5rem;
+  display: none;
+}
+
+.result-box.show { display: block; }
+
+.result-arrow {
+  text-align: center;
+  color: var(--muted);
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.time-display {
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.time-display .big-time {
+  font-size: 2.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-display .zone-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+.time-display .offset-label {
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.share-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.share-row input {
+  flex: 1;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ── Settings ───────────────────────────────────────────────────────────────── */
+.tz-preview {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  min-height: 1.2em;
+}
+
+.form-row { margin-bottom: 1rem; }
+.form-actions { display: flex; gap: 0.5rem; margin-top: 1.2rem; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  main { padding: 1.5rem 1rem; }
+  #clock-time { font-size: 3rem; }
+  .big-time { font-size: 1.8rem !important; }
+}

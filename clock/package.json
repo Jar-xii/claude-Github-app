@@ -1,0 +1,22 @@
+{
+  "name": "universal-clock",
+  "version": "1.0.0",
+  "description": "Universal timezone clock for website and Discord bot",
+  "scripts": {
+    "start:bot": "node bot/index.js",
+    "start:web": "node web/server.js",
+    "deploy:commands": "node bot/deploy-commands.js",
+    "test": "node --test tests/timeParser.test.js tests/timezoneAliases.test.js tests/api.test.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "luxon": "^3.4.4",
+    "zod": "^3.22.4"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

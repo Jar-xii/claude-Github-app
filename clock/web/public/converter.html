@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Converter — Universal Clock</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/">🌐 Universal Clock</a>
+    <a href="/">Clock</a>
+    <a href="/converter" class="active">Converter</a>
+    <a href="/settings">Settings</a>
+  </nav>
+
+  <main>
+    <h1>Time Converter</h1>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.5rem">
+      Enter a time with a timezone — e.g. <strong>8pm UK</strong>, <strong>15:00 Tokyo</strong>,
+      <strong>3:30pm EST</strong>, <strong>noon UTC</strong>.
+    </p>
+
+    <div class="card">
+      <div class="form-row">
+        <label for="time-input">Time to convert</label>
+        <input type="text" id="time-input" placeholder="e.g. 8pm UK" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="alert" id="parse-error"></div>
+    </div>
+
+    <div class="result-box" id="result-box">
+      <div class="time-display" id="original-display">
+        <div class="big-time" id="orig-time"></div>
+        <div class="zone-label" id="orig-zone"></div>
+        <div class="offset-label" id="orig-offset"></div>
+      </div>
+
+      <div class="result-arrow">↓</div>
+
+      <div class="time-display" id="converted-display">
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:.3rem">In your timezone</div>
+        <div class="big-time" id="conv-time"></div>
+        <div class="zone-label" id="conv-zone"></div>
+        <div class="offset-label" id="conv-offset"></div>
+        <div id="no-tz-msg" style="display:none;font-size:.8rem;color:var(--muted)">
+          <a href="/settings">Set your timezone</a> to see the conversion
+        </div>
+      </div>
+
+      <div class="share-row">
+        <input type="text" id="share-url" readonly placeholder="Share link will appear here">
+        <button id="copy-btn" class="secondary">Copy link</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/converter.js"></script>
+</body>
+</html>

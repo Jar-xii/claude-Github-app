@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Clock</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/">🌐 Universal Clock</a>
+    <a href="/" class="active">Clock</a>
+    <a href="/converter">Converter</a>
+    <a href="/settings">Settings</a>
+  </nav>
+
+  <main>
+    <div id="no-tz-banner" style="display:none">
+      You haven't set your timezone yet. <a href="/settings">Set it now</a> to see your local time.
+    </div>
+
+    <div class="card">
+      <div id="clock-time">--:-- --</div>
+      <div id="clock-date"></div>
+      <div id="clock-zone"></div>
+      <div id="clock-offset"></div>
+    </div>
+
+    <div class="card">
+      <h2>What is this?</h2>
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.6">
+        Universal Clock lets anyone post a time in their local timezone (e.g. "8pm UK") and
+        have it automatically converted for everyone else. Set your timezone in
+        <a href="/settings">Settings</a>, then use the <a href="/converter">Converter</a>
+        to share times or see times posted by others.
+      </p>
+    </div>
+  </main>
+
+  <script src="/js/clock.js"></script>
+</body>
+</html>

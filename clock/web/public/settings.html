@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Universal Clock</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/">🌐 Universal Clock</a>
+    <a href="/">Clock</a>
+    <a href="/converter">Converter</a>
+    <a href="/settings" class="active">Settings</a>
+  </nav>
+
+  <main>
+    <h1>Timezone Settings</h1>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.5rem">
+      Your timezone is stored in this browser. Others will see times converted to your setting
+      when you open a shared link.
+    </p>
+
+    <div class="card">
+      <div class="form-row">
+        <label for="tz-search">Search by alias or city</label>
+        <input type="text" id="tz-search" placeholder="e.g. UK, EST, Tokyo, Europe/London" autocomplete="off" spellcheck="false">
+        <div id="search-results" style="margin-top:.4rem"></div>
+      </div>
+
+      <div class="form-row">
+        <label for="tz-select">Or choose from list</label>
+        <select id="tz-select">
+          <option value="">— Select a timezone —</option>
+        </select>
+      </div>
+
+      <div class="tz-preview" id="tz-preview"></div>
+
+      <div class="form-actions">
+        <button id="save-btn">Save timezone</button>
+        <button class="secondary" id="clear-btn">Clear</button>
+      </div>
+
+      <div class="alert" id="alert"></div>
+    </div>
+
+    <div class="card" id="current-card" style="display:none">
+      <h2>Current setting</h2>
+      <p id="current-tz" style="font-size:.95rem"></p>
+    </div>
+  </main>
+
+  <script src="/js/settings.js"></script>
+</body>
+</html>
