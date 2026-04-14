@@ -16,12 +16,14 @@ function getDb() {
   if (db) return db;
 
   const Database = require('better-sqlite3');
-  const dbPath = process.env.DB_PATH
-    ? path.resolve(process.cwd(), process.env.DB_PATH)
-    : path.resolve(__dirname, '../data/timezones.db');
+  const rawPath = process.env.DB_PATH || path.resolve(__dirname, '../data/timezones.db');
+  // ':memory:' is a special SQLite path — do not resolve it to a file path
+  const dbPath = rawPath === ':memory:' ? ':memory:' : path.resolve(process.cwd(), rawPath);
 
-  // Ensure the directory exists
-  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+  // Ensure the directory exists (not needed for in-memory)
+  if (dbPath !== ':memory:') {
+    fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+  }
 
   db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
